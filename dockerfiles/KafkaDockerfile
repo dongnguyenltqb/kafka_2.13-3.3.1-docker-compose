@@ -1,0 +1,4 @@
+FROM openjdk:20-slim-buster
+WORKDIR /app
+COPY . .
+CMD  ./bin/kafka-server-start.sh config/server.properties

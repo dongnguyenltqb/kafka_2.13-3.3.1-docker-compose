@@ -1,0 +1,4 @@
+FROM openjdk:20-slim-buster
+WORKDIR /app
+COPY . .
+CMD ./bin/zookeeper-server-start.sh config/zookeeper.properties

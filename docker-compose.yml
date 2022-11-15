@@ -1,0 +1,59 @@
+version: "3.9"
+
+networks:
+  default:
+    name: kafka
+    driver: bridge
+
+volumes:
+  leesindata:
+  garendata:
+  temodata:
+  zookeeperdata:
+
+services:
+  zookeeper:
+    build: 
+      context: kafka_2.13-3.3.1
+      dockerfile: ../dockerfiles/ZookeeperDockerfile
+    volumes:
+      - zookeeperdata:/tmp/zookeeper
+      - ./configfiles/zookeeper.properties:/app/config/zookeeper.properties
+  
+  leesin:
+    build: 
+      context: kafka_2.13-3.3.1
+      dockerfile: ../dockerfiles/KafkaDockerfile
+    volumes:
+      - leesindata:/tmp/kafka-logs
+      - ./configfiles/leesin/server.properties:/app/config/server.properties
+    ports:
+      - 4000:4000
+    
+  garen:
+    build: 
+      context: kafka_2.13-3.3.1
+      dockerfile: ../dockerfiles/KafkaDockerfile
+    volumes:
+      - garendata:/tmp/kafka-logs
+      - ./configfiles/garen/server.properties:/app/config/server.properties
+    ports:
+      - 5000:5000
+
+  temo:
+    build: 
+      context: kafka_2.13-3.3.1
+      dockerfile: ../dockerfiles/KafkaDockerfile
+    volumes:
+      - temodata:/tmp/kafka-logs
+      - ./configfiles/temo/server.properties:/app/config/server.properties
+    ports:
+      - 6000:6000
+
+  ui:
+    image: provectuslabs/kafka-ui:latest
+    ports:
+      - "8080:8080"
+    env_file:
+      - env-files/ui.env
+
